@@ -1,0 +1,8 @@
+prefix=/home/glyn/ros_amr/devel
+
+Name: niubi_nav_goals
+Description: Description of niubi_nav_goals
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/glyn/ros_amr/devel/lib 
+Requires: 

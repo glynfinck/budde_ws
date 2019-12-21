@@ -1,0 +1,2 @@
+ddynamic_reconfigure:mobile_robot_2dnav:mobile_robot_odom:mobile_robot_setup_tf:niubi_nav_goals:orb_slam_2_ros:realsense-ros/realsense2_camera:realsense-ros/realsense2_description
+-DCATKIN_DEVEL_PREFIX=/home/glyn/ros_amr/devel -DCMAKE_INSTALL_PREFIX=/home/glyn/ros_amr/install -G Unix Makefiles
