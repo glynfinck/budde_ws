@@ -1,8 +1,1 @@
-prefix=/home/glyn/ros_amr/devel
-
-Name: mobile_robot_setup_tf
-Description: Description of mobile_robot_setup_tf
-Version: 0.0.0
-Cflags: 
-Libs: -L/home/glyn/ros_amr/devel/lib 
-Requires: 
+/home/glyn/budde_ws/devel/.private/mobile_robot_setup_tf/lib/pkgconfig/mobile_robot_setup_tf.pc

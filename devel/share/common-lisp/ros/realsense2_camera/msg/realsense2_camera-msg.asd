@@ -1,12 +1,1 @@
-
-(cl:in-package :asdf)
-
-(defsystem "realsense2_camera-msg"
-  :depends-on (:roslisp-msg-protocol :roslisp-utils :std_msgs-msg
-)
-  :components ((:file "_package")
-    (:file "Extrinsics" :depends-on ("_package_Extrinsics"))
-    (:file "_package_Extrinsics" :depends-on ("_package"))
-    (:file "IMUInfo" :depends-on ("_package_IMUInfo"))
-    (:file "_package_IMUInfo" :depends-on ("_package"))
-  ))
+/home/glyn/budde_ws/devel/.private/realsense2_camera/share/common-lisp/ros/realsense2_camera/msg/realsense2_camera-msg.asd

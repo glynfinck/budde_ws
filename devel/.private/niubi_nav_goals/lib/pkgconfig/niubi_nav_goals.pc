@@ -1,0 +1,8 @@
+prefix=/home/glyn/budde_ws/devel/.private/niubi_nav_goals
+
+Name: niubi_nav_goals
+Description: Description of niubi_nav_goals
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/glyn/budde_ws/devel/.private/niubi_nav_goals/lib 
+Requires: 

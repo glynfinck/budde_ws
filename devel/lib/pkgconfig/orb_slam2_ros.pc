@@ -1,8 +1,1 @@
-prefix=/home/glyn/ros_amr/devel
-
-Name: orb_slam2_ros
-Description: Description of orb_slam2_ros
-Version: 0.0.1
-Cflags: -I/home/glyn/ros_amr/devel/include
-Libs: -L/home/glyn/ros_amr/devel/lib -l{PROJECT_NAME} -llibDBoW2 -llibg2o
-Requires: roscpp rospy std_msgs cv_bridge image_transport tf sensor_msgs dynamic_reconfigure message_runtime
+/home/glyn/budde_ws/devel/.private/orb_slam2_ros/lib/pkgconfig/orb_slam2_ros.pc

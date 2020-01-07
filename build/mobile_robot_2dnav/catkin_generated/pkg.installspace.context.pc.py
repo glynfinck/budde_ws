@@ -4,5 +4,5 @@ PROJECT_PKG_CONFIG_INCLUDE_DIRS = "".split(';') if "" != "" else []
 PROJECT_CATKIN_DEPENDS = "".replace(';', ' ')
 PKG_CONFIG_LIBRARIES_WITH_PREFIX = "".split(';') if "" != "" else []
 PROJECT_NAME = "mobile_robot_2dnav"
-PROJECT_SPACE_DIR = "/home/glyn/ros_amr/install"
+PROJECT_SPACE_DIR = "/home/glyn/budde_ws/install"
 PROJECT_VERSION = "0.0.0"

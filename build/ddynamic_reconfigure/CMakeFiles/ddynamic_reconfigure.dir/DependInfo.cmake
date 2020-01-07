@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/glyn/ros_amr/src/ddynamic_reconfigure/src/ddynamic_reconfigure.cpp" "/home/glyn/ros_amr/build/ddynamic_reconfigure/CMakeFiles/ddynamic_reconfigure.dir/src/ddynamic_reconfigure.cpp.o"
+  "/home/glyn/budde_ws/src/ddynamic_reconfigure/src/ddynamic_reconfigure.cpp" "/home/glyn/budde_ws/build/ddynamic_reconfigure/CMakeFiles/ddynamic_reconfigure.dir/src/ddynamic_reconfigure.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
@@ -17,7 +17,7 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
-  "/home/glyn/ros_amr/src/ddynamic_reconfigure/include"
+  "/home/glyn/budde_ws/src/ddynamic_reconfigure/include"
   "/opt/ros/melodic/include"
   "/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp"
   "/usr/src/googletest/googlemock/include"

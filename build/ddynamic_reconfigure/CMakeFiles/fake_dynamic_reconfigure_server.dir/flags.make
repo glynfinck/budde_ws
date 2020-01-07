@@ -6,5 +6,5 @@ CXX_FLAGS =  -std=c++0x
 
 CXX_DEFINES = -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\"ddynamic_reconfigure\"
 
-CXX_INCLUDES = -I/home/glyn/ros_amr/src/ddynamic_reconfigure/include -isystem /opt/ros/melodic/include -isystem /opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/src/googletest/googlemock/include 
+CXX_INCLUDES = -I/home/glyn/budde_ws/src/ddynamic_reconfigure/include -isystem /opt/ros/melodic/include -isystem /opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/src/googletest/googlemock/include 
 

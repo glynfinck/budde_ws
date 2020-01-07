@@ -1,0 +1,6 @@
+devel_space: /home/glyn/budde_ws/devel
+install: false
+install_space: /home/glyn/budde_ws/install
+profile: default
+source_space: /home/glyn/budde_ws/src
+workspace: /home/glyn/budde_ws

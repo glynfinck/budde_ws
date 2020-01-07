@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/ddynamic_reconfigure-test.dir/test/test_ddynamic_reconfigure.cpp.o"
-  "/home/glyn/ros_amr/devel/lib/ddynamic_reconfigure/ddynamic_reconfigure-test.pdb"
-  "/home/glyn/ros_amr/devel/lib/ddynamic_reconfigure/ddynamic_reconfigure-test"
+  "/home/glyn/budde_ws/devel/.private/ddynamic_reconfigure/lib/ddynamic_reconfigure/ddynamic_reconfigure-test.pdb"
+  "/home/glyn/budde_ws/devel/.private/ddynamic_reconfigure/lib/ddynamic_reconfigure/ddynamic_reconfigure-test"
 )
 
 # Per-language clean rules from dependency scanning.

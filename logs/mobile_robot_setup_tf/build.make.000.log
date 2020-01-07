@@ -1,0 +1,4 @@
+[35m[1mScanning dependencies of target tf_robot[0m
+[ 50%] [32mBuilding CXX object CMakeFiles/tf_robot.dir/tf_broadcaster.cpp.o[0m
+[100%] [32m[1mLinking CXX executable /home/glyn/budde_ws/devel/.private/mobile_robot_setup_tf/lib/mobile_robot_setup_tf/tf_robot[0m
+[100%] Built target tf_robot

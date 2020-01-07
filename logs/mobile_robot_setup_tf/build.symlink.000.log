@@ -1,0 +1,4 @@
+Symlinking /home/glyn/budde_ws/devel/lib/pkgconfig/mobile_robot_setup_tf.pc
+Symlinking /home/glyn/budde_ws/devel/lib/mobile_robot_setup_tf/tf_robot
+Symlinking /home/glyn/budde_ws/devel/share/mobile_robot_setup_tf/cmake/mobile_robot_setup_tfConfig-version.cmake
+Symlinking /home/glyn/budde_ws/devel/share/mobile_robot_setup_tf/cmake/mobile_robot_setup_tfConfig.cmake

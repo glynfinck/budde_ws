@@ -1,14 +1,1 @@
-# generated from catkin/cmake/template/pkgConfig-version.cmake.in
-set(PACKAGE_VERSION "0.0.0")
-
-set(PACKAGE_VERSION_EXACT False)
-set(PACKAGE_VERSION_COMPATIBLE False)
-
-if("${PACKAGE_FIND_VERSION}" VERSION_EQUAL "${PACKAGE_VERSION}")
-  set(PACKAGE_VERSION_EXACT True)
-  set(PACKAGE_VERSION_COMPATIBLE True)
-endif()
-
-if("${PACKAGE_FIND_VERSION}" VERSION_LESS "${PACKAGE_VERSION}")
-  set(PACKAGE_VERSION_COMPATIBLE True)
-endif()
+/home/glyn/budde_ws/devel/.private/mobile_robot_2dnav/share/mobile_robot_2dnav/cmake/mobile_robot_2dnavConfig-version.cmake

@@ -1,0 +1,8 @@
+prefix=/home/glyn/budde_ws/devel/.private/ddynamic_reconfigure
+
+Name: ddynamic_reconfigure
+Description: Description of ddynamic_reconfigure
+Version: 0.2.2
+Cflags: -I/home/glyn/budde_ws/src/ddynamic_reconfigure/include
+Libs: -L/home/glyn/budde_ws/devel/.private/ddynamic_reconfigure/lib -lddynamic_reconfigure
+Requires: roscpp dynamic_reconfigure

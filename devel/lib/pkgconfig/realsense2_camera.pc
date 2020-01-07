@@ -1,8 +1,1 @@
-prefix=/home/glyn/ros_amr/devel
-
-Name: realsense2_camera
-Description: Description of realsense2_camera
-Version: 2.2.11
-Cflags: -I/home/glyn/ros_amr/devel/include
-Libs: -L/home/glyn/ros_amr/devel/lib -lrealsense2_camera
-Requires: message_runtime roscpp sensor_msgs std_msgs nodelet cv_bridge image_transport ddynamic_reconfigure nav_msgs
+/home/glyn/budde_ws/devel/.private/realsense2_camera/lib/pkgconfig/realsense2_camera.pc

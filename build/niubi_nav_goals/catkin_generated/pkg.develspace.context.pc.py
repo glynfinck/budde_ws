@@ -4,5 +4,5 @@ PROJECT_PKG_CONFIG_INCLUDE_DIRS = "".split(';') if "" != "" else []
 PROJECT_CATKIN_DEPENDS = "".replace(';', ' ')
 PKG_CONFIG_LIBRARIES_WITH_PREFIX = "".split(';') if "" != "" else []
 PROJECT_NAME = "niubi_nav_goals"
-PROJECT_SPACE_DIR = "/home/glyn/ros_amr/devel"
+PROJECT_SPACE_DIR = "/home/glyn/budde_ws/devel/.private/niubi_nav_goals"
 PROJECT_VERSION = "0.0.0"

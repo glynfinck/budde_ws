@@ -39,12 +39,13 @@
 
     <!-- ORB SLAM Odometry -->
     <include file="$(find orb_slam2_ros)/ros/launch/orb_slam2_d435i_rgbd.launch" />
+
     <node pkg="mobile_robot_odom" type="odom_trashbot" name="odom" />
 
-    <!-- Robot Localization Node -->
+    <!-- Robot Localization Node
     <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true" >
 	    <rosparam file="$(find mobile_robot_2dnav)/param/ekf.yaml" command="load" />
-    </node>
+    </node> -->
     
   
     <!-- TF Setup Node -->

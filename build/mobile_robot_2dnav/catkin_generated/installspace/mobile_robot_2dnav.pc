@@ -1,8 +1,8 @@
-prefix=/home/glyn/ros_amr/install
+prefix=/home/glyn/budde_ws/install
 
 Name: mobile_robot_2dnav
 Description: Description of mobile_robot_2dnav
 Version: 0.0.0
 Cflags: 
-Libs: -L/home/glyn/ros_amr/install/lib 
+Libs: -L/home/glyn/budde_ws/install/lib 
 Requires: 

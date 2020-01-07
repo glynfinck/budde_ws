@@ -1,10 +1,1 @@
-
-"use strict";
-
-let IMUInfo = require('./IMUInfo.js');
-let Extrinsics = require('./Extrinsics.js');
-
-module.exports = {
-  IMUInfo: IMUInfo,
-  Extrinsics: Extrinsics,
-};
+/home/glyn/budde_ws/devel/.private/realsense2_camera/share/gennodejs/ros/realsense2_camera/msg/_index.js
