@@ -1,8 +1,0 @@
-prefix=/home/glyn/budde_ws/devel/.private/mobile_robot_setup_tf
-
-Name: mobile_robot_setup_tf
-Description: Description of mobile_robot_setup_tf
-Version: 0.0.0
-Cflags: 
-Libs: -L/home/glyn/budde_ws/devel/.private/mobile_robot_setup_tf/lib 
-Requires: 

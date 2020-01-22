@@ -1,0 +1,8 @@
+prefix=/home/glyn/budde_ws/devel/.private/trashbot_2dnav
+
+Name: trashbot_2dnav
+Description: Description of trashbot_2dnav
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/glyn/budde_ws/devel/.private/trashbot_2dnav/lib 
+Requires: 

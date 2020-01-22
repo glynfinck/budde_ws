@@ -1,0 +1,8 @@
+prefix=/home/glyn/budde_ws/install
+
+Name: trashbot_odom
+Description: Description of trashbot_odom
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/glyn/budde_ws/install/lib 
+Requires: 

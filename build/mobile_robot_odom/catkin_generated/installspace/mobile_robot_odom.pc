@@ -1,8 +1,0 @@
-prefix=/home/glyn/budde_ws/install
-
-Name: mobile_robot_odom
-Description: Description of mobile_robot_odom
-Version: 0.0.0
-Cflags: 
-Libs: -L/home/glyn/budde_ws/install/lib 
-Requires: 

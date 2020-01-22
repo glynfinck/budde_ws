@@ -1,0 +1,8 @@
+prefix=/home/glyn/budde_ws/devel/.private/trashbot_setup_tf
+
+Name: trashbot_setup_tf
+Description: Description of trashbot_setup_tf
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/glyn/budde_ws/devel/.private/trashbot_setup_tf/lib 
+Requires: 

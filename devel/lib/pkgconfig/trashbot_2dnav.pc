@@ -1,0 +1,1 @@
+/home/glyn/budde_ws/devel/.private/trashbot_2dnav/lib/pkgconfig/trashbot_2dnav.pc

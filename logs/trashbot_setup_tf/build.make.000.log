@@ -1,0 +1,8 @@
+[35m[1mScanning dependencies of target tf_robot[0m
+[35m[1mScanning dependencies of target tf_map_broadcaster[0m
+[ 25%] [32mBuilding CXX object CMakeFiles/tf_robot.dir/tf_broadcaster.cpp.o[0m
+[ 50%] [32mBuilding CXX object CMakeFiles/tf_map_broadcaster.dir/tf_map_broadcaster.cpp.o[0m
+[ 75%] [32m[1mLinking CXX executable /home/glyn/budde_ws/devel/.private/trashbot_setup_tf/lib/trashbot_setup_tf/tf_robot[0m
+[ 75%] Built target tf_robot
+[100%] [32m[1mLinking CXX executable /home/glyn/budde_ws/devel/.private/trashbot_setup_tf/lib/trashbot_setup_tf/tf_map_broadcaster[0m
+[100%] Built target tf_map_broadcaster

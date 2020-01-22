@@ -1,0 +1,1 @@
+/home/glyn/budde_ws/devel/.private/trashbot_setup_tf/lib/pkgconfig/trashbot_setup_tf.pc

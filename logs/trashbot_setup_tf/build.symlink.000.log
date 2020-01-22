@@ -1,0 +1,5 @@
+Symlinking /home/glyn/budde_ws/devel/lib/trashbot_setup_tf/tf_map_broadcaster
+Symlinking /home/glyn/budde_ws/devel/lib/trashbot_setup_tf/tf_robot
+Symlinking /home/glyn/budde_ws/devel/lib/pkgconfig/trashbot_setup_tf.pc
+Symlinking /home/glyn/budde_ws/devel/share/trashbot_setup_tf/cmake/trashbot_setup_tfConfig-version.cmake
+Symlinking /home/glyn/budde_ws/devel/share/trashbot_setup_tf/cmake/trashbot_setup_tfConfig.cmake

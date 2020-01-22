@@ -1,0 +1,4 @@
+Symlinking /home/glyn/budde_ws/devel/lib/trashbot_odom/odom_trashbot
+Symlinking /home/glyn/budde_ws/devel/lib/pkgconfig/trashbot_odom.pc
+Symlinking /home/glyn/budde_ws/devel/share/trashbot_odom/cmake/trashbot_odomConfig-version.cmake
+Symlinking /home/glyn/budde_ws/devel/share/trashbot_odom/cmake/trashbot_odomConfig.cmake
