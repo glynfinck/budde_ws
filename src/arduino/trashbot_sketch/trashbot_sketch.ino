@@ -37,6 +37,17 @@
 // ===                    MOTOR/SERVO SETTINGS                  ===
 // ================================================================
 
+
+double MIN_LINEAR_BASE_PLAN = 0.079;
+double MAX_LINEAR_BASE_PLAN = 0.319;
+double MIN_ANGULAR_BASE_PLAN = -1.0;
+double MAX_ANGULAR_BASE_PLAN = 1.0;
+
+double MIN_LINEAR = 1.3;
+double MAX_LINEAR = 2.0;
+double MIN_ANGULAR = -1.5;
+double MAX_ANGULAR = 1.5;
+
 int pwmPin0 = 5; ///< Arduino pin for motor 1 spin control.
 int pwmPin1 = 6; ///< Arduino pin for motor 2 spin control.
 int INaPin0 = 8; ///< Motor 1 Spin control.
@@ -58,6 +69,8 @@ Servo servo4;
 Servo servo5;
 Servo servo6;
 
+geometry_msgs::Twist twist_msg;
+ros::Publisher cmd_vel_debug("cmd_vel_debug", &twist_msg);
 
 // ================================================================
 // ===                    FUNCTIONS                    ===
@@ -147,6 +160,19 @@ void write_to_motor(int speed, int pwmPin, int INaPin, int INbPin){
     }
 }
 
+/**
+ * Function to tranform a value x which is in the current range to the target range.
+ * 
+ * @param x, the value that is within the current range
+ * @param curr_min, the lower bound of the current range
+ * @param curr_max, the upper bound of the current range
+ * @param targ_min, the lower bound of the target range
+ * @param targ_max, the upper bound of the target range
+ * @retval y, the new value within the target range
+ */
+double scale_range(double x, double curr_min, double curr_max, double targ_min, double targ_max){
+  return ((x - curr_min) / (curr_max - curr_min)) * (targ_max - targ_min) + targ_min;
+}
 
 /**
  * Main motor function
@@ -159,9 +185,33 @@ void write_to_motor(int speed, int pwmPin, int INaPin, int INbPin){
  * @retval none
  */
 void control_motor(const geometry_msgs::Twist& cmd_msg){
-
-    double x = cmd_msg.linear.x;
-    double angular = cmd_msg.angular.z;
+    double x;
+    if(cmd_msg.linear.x == 0.0){
+      x = 0.0;
+    }else{
+      x = scale_range(cmd_msg.linear.x,
+                              MIN_LINEAR_BASE_PLAN,
+                              MAX_LINEAR_BASE_PLAN,
+                              MIN_LINEAR,
+                              MAX_LINEAR);
+    }
+    double angular;
+    if(cmd_msg.angular.z == 0.0){
+     angular = 0.0;
+    }else{
+      angular = scale_range(cmd_msg.angular.z,
+                                    MIN_ANGULAR_BASE_PLAN,
+                                    MAX_ANGULAR_BASE_PLAN,
+                                    MIN_ANGULAR,
+                                    MAX_ANGULAR);
+    }
+    geometry_msgs::Twist debug_msg;
+    
+    debug_msg.linear.x = float(x);
+    debug_msg.angular.z = float(angular);
+    
+    cmd_vel_debug.publish(&debug_msg);
+    
     int right = int((x + angular) * 50);
     int left = int((x - angular) * 50);
 
@@ -183,15 +233,18 @@ void control_motor(const geometry_msgs::Twist& cmd_msg){
 */
 
 ros::NodeHandle nh;
+
 ros::Subscriber<std_msgs::UInt16> sub_servo1("servo1", control_servo1);
 ros::Subscriber<std_msgs::UInt16> sub_servo2("servo2", control_servo2);
 ros::Subscriber<geometry_msgs::Twist> sub_motors("cmd_vel", control_motor);
+
 
 void setup() {
     nh.initNode();
     nh.subscribe(sub_servo1);
     nh.subscribe(sub_servo2);
     nh.subscribe(sub_motors);
+    nh.advertise(cmd_vel_debug);
 
     if (START_SERVOS == 1){
         start_servos();
