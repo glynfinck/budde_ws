@@ -80,7 +80,7 @@ class TrashBot:
         self.rgb_image_sub = message_filters.Subscriber('/camera/color/image_raw', Image)
         self.depth_image_sub = message_filters.Subscriber('/camera/depth/image_rect_raw', Image)
         self.box_sub = message_filters.Subscriber('/darknet_ros/bounding_boxes',BoundingBoxes)
-        self.global_pose_sub = message_filters.Subscriber('', Pose)
+        self.goal_reached_sub = message_filters.Subscriber('/rtabmap/goal_reached', Bool)
 
         # Initially set dropoff
         self.robot_state = self.STATE_SET_DROPOFF
@@ -249,7 +249,7 @@ class TrashBot:
     '''
     def navigate_dropoff(self):
         self.goal_simple_pub.publish(dropoff_pose)
-        self.global_pose_sub = rospy.Subscriber(_, _, self.navigate_dropoff_callback)
+        self.goal_reached_sub = rospy.Subscriber('/rtabmap/goal_reached', Bool, self.navigate_dropoff_callback)
 
         while self.robot_state is self.STATE_NAV_DROPOFF and not rospy.is_shutdown():
             self.state_pub.publish(self.robot_state)
@@ -257,15 +257,14 @@ class TrashBot:
 
         self.box_sub.unregister()
 
-    '''
-    Callback function for navigating to dropoff location, reads global pose of robot
-    and checks if close enough to dropoff location
-    '''
-    def navigate_dropoff(self, data):
-        if math.sqrt(pow(float(self.data.x-self.dropoff_pose.x),2)
-            + pow(float(self.data.y-self.dropoff_pose.y),2)) < self.goal_radius:
 
+    '''
+    Callback function for navigating to dropoff location, checks if goal reached
+    '''
+    def navigate_dropoff_callback(self, data):
+        if data == True:
             self.robot_state = STATE_DROPOFF_BOTTLE
+
 
     '''
     Drop off a bottle
@@ -294,8 +293,6 @@ if __name__ == '__main__':
         bot = TrashBot()
 
         while not rospy.is_shutdown():
-            bot.state_pub.publish(bot.robot_state)
-
             if bot.robot_state == bot.STATE_STOP:
                 bot.stop()
             elif bot.robot_state == bot.STATE_SET_DROPOFF:
