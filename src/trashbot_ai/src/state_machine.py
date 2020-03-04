@@ -105,7 +105,8 @@ class TrashBot:
             self.vel_rate.sleep()
 
     def set_dropoff(self):
-        self.dropoff_poase = Pose()
+        # Just set at origin for now
+        self.dropoff_pose = Pose()
         self.dropoff_pose.position.x = 0.0
         self.dropoff_pose.position.y = 0.0
         self.dropoff_pose.position.z = 0.0
@@ -142,7 +143,7 @@ class TrashBot:
     def find_bottle_callback(self, data):
         boxes = data.bounding_boxes
         box = next(iter(list(filter(lambda x : x.Class == "bottle", boxes))), None)
-       
+
         if box != None:
             # Determine bottle position relative to 0, in range [-1, 1]
             xpos = ((box.xmax + box.xmin) / 2.0 - self.IMAGE_HALF_WIDTH) / self.IMAGE_HALF_WIDTH
@@ -173,7 +174,7 @@ class TrashBot:
     def navigate_bottle_callback(self, data):
         boxes = data.bounding_boxes
         box = next(iter(list(filter(lambda x : x.Class == "bottle", boxes))), None)
-        
+
         if box != None:
             # Navigate to first bottle seen
             # Determine size of bottle
@@ -217,7 +218,7 @@ class TrashBot:
     def navigate_dropoff(self):
         pass
 
-    
+
     '''
     Set turn velocity and forward velocity (i.e. Z Gyro and X Velocity in Twist msg)
     '''
