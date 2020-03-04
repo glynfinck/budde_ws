@@ -210,6 +210,7 @@ class TrashBot:
             print("Bottle Size = {}".format(size))
             if size > self.GRAB_SIZE_THRESHOLD:
                 self.robot_state = self.STATE_PICKUP_BOTTLE
+                return
 
             # Determine bottle position relative to 0, in range [-1, 1], scaled by xpos
             xpos = ((box.xmax + box.xmin) / 2.0 - self.IMAGE_HALF_WIDTH) / self.IMAGE_HALF_WIDTH * (size / self.IMAGE_HALF_WIDTH)
