@@ -11,12 +11,11 @@ from std_msgs.msg import UInt16
 from std_msgs.msg import Bool
 from geometry_msgs.msg import Twist
 from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import Pose
 from sensor_msgs.msg import Image
 import message_filters
 from cv_bridge import CvBridge, CvBridgeError
 from darknet_ros_msgs.msg import BoundingBox,BoundingBoxes
-
-from bottle_queue import BottleQueue
 
 print("Environment Ready")
 
@@ -32,24 +31,20 @@ class TrashBot:
     IMAGE_WIDTH = 640.0
     IMAGE_HALF_WIDTH = 320.0
 
-    HFOV = 69.4 # degrees
-    CAMERA_HEIGHT = 0.5 # height in meters from ground
-    CAMERA_ANGLE = 30.0 # angle with respect to the plane paralell to the ground
-                        # (where angle below the plane is positive)
     VEL_PUBLISH_RATE = 7.0
     SERVO_PUBLISH_RATE = 7.0
     QUEUE_SIZE = 10
 
     PROPORTIONAL = 2.0
     MINIUMUM_TURN = 1.5
-    FIND_TURN = 1.25
+    FIND_TURN = 1.4
     VEL_PUBLISH_RATE = 10.0
-    SERVO_PUBLISH_RATE = 1.0
+    SERVO_PUBLISH_RATE = 10.0
     QUEUE_SIZE = 10
     CLAW_DELAY = 0.5
     TURN_DELAY = 0.08
     STARTUP_TRACKER_DELAY = 1.0
-    STARTUP_QR_DELAY = 1.0
+    STARTUP_DROPOFF_DELAY = 1.0
     ARM_DOWN_ANGLE = 30.0
     ARM_UP_ANGLE = 50.0
     CLAW_CLOSED_ANGLE = 30.0
@@ -76,6 +71,7 @@ class TrashBot:
         self.claw_pub = rospy.Publisher("/claw", UInt16, queue_size = self.QUEUE_SIZE)
         self.state_pub = rospy.Publisher("/robot_state", Int8, queue_size = self.QUEUE_SIZE)
         self.tracker_flag = rospy.Publisher("/tracker_flag", Bool, queue_size = self.QUEUE_SIZE)
+
         # And publish rates
         self.vel_rate = rospy.Rate(self.VEL_PUBLISH_RATE)
         self.servo_rate = rospy.Rate(self.SERVO_PUBLISH_RATE)
@@ -84,20 +80,14 @@ class TrashBot:
         self.rgb_image_sub = message_filters.Subscriber('/camera/color/image_raw', Image)
         self.depth_image_sub = message_filters.Subscriber('/camera/depth/image_rect_raw', Image)
         self.box_sub = message_filters.Subscriber('/darknet_ros/bounding_boxes',BoundingBoxes)
+        self.global_pose_sub = message_filters.Subscriber('', Pose)
 
-
-        # Custom queue structure for storing bottle pose information
-        DIFFERENT_BOTTLE_THRESHOLD_RADIUS = 1.0
-        self.bqueue = BottleQueue(DIFFERENT_BOTTLE_THRESHOLD_RADIUS)
-
-        # Initially search for a bottle
-        self.robot_state = self.STATE_FIND_BOTTLE
-        self.state_pub.publish(self.robot_state)
+        # Initially set dropoff
+        self.robot_state = self.STATE_SET_DROPOFF
 
         # Set initial servo positions
         self.claw_pub.publish(self.CLAW_OPEN_ANGLE)
         self.arm_pub.publish(self.ARM_DOWN_ANGLE)
-
 
         # Velocity message, sent to /cmd_vel at VEL_PUBLISH_RATE
         self.vel = Twist()
@@ -110,6 +100,9 @@ class TrashBot:
 
         # Zero velocity message
         self.zero_vel = copy.deepcopy(self.vel)
+
+        # Goal radius
+        self.goal_radius = 0.5
 
         print("="*50)
         print("= Initialize TrashBot")
@@ -132,9 +125,14 @@ class TrashBot:
 
         while self.robot_state is self.STATE_STOP and not rospy.is_shutdown():
             self.vel_pub.publish(self.vel)
+            self.state_pub.publish(self.robot_state)
             self.vel_rate.sleep()
 
     def set_dropoff(self):
+        self.state_pub.publish(self.robot_state)
+        self.set_vel(0.0, 0.0)
+        self.vel_pub.publish(self.vel)
+
         # Just set at origin for now
         self.dropoff_pose = Pose()
         self.dropoff_pose.position.x = 0.0
@@ -145,6 +143,8 @@ class TrashBot:
         self.dropoff_pose.orientation.y = qy
         self.dropoff_pose.orientation.z = qz
         self.dropoff_pose.orientation.w = qw
+
+        self.robot_state = self.STATE_FIND_BOTTLE
 
     '''
     Randomly navigate around room until a bottle is found (i.e. until the bottle queue
@@ -157,12 +157,13 @@ class TrashBot:
 
         while self.robot_state is self.STATE_FIND_BOTTLE and not rospy.is_shutdown():
             self.vel_pub.publish(self.vel)
+            self.state_pub.publish(self.robot_state)
             self.vel_rate.sleep()
 
         self.box_sub.unregister()
         self.set_vel(0.0, 0.0)
         self.vel_pub.publish(self.vel)
-        time.sleep(self.STARTUP_TRACKER_DELAY)
+        #time.sleep(self.STARTUP_TRACKER_DELAY)
 
     '''
     Callback function for finding bottle whenever a new bounding box is published
@@ -189,6 +190,7 @@ class TrashBot:
 
         while self.robot_state is self.STATE_NAV_BOTTLE and not rospy.is_shutdown():
             self.vel_pub.publish(self.vel)
+            self.state_pub.publish(self.robot_state)
             self.vel_rate.sleep()
 
         self.box_sub.unregister()
@@ -231,14 +233,15 @@ class TrashBot:
     Pickup a bottle
     '''
     def pickup_bottle(self):
+        self.state_pub.publish(self.robot_state)
         self.set_vel(0.0, 0.0)
         self.vel_pub.publish(self.vel)
+
         self.claw_pub.publish(self.CLAW_CLOSED_ANGLE)
         time.sleep(self.CLAW_DELAY)
         self.arm_pub.publish(self.ARM_UP_ANGLE)
-
-        time.sleep(self.STARTUP_QR_DELAY)
-        self.robot_state = self.STATE_FIND_QR
+        time.sleep(self.STARTUP_DROPOFF_DELAY)
+        self.robot_state = self.STATE_NAV_DROPOFF
 
 
     '''
@@ -246,16 +249,36 @@ class TrashBot:
     '''
     def navigate_dropoff(self):
         self.goal_simple_pub.publish(dropoff_pose)
+        self.global_pose_sub = rospy.Subscriber(_, _, self.navigate_dropoff_callback)
+
+        while self.robot_state is self.STATE_NAV_DROPOFF and not rospy.is_shutdown():
+            self.state_pub.publish(self.robot_state)
+            rospy.spin()
+
+        self.box_sub.unregister()
+
+    '''
+    Callback function for navigating to dropoff location, reads global pose of robot
+    and checks if close enough to dropoff location
+    '''
+    def navigate_dropoff(self, data):
+        if math.sqrt(pow(float(self.data.x-self.dropoff_pose.x),2)
+            + pow(float(self.data.y-self.dropoff_pose.y),2)) < self.goal_radius:
+
+            self.robot_state = STATE_DROPOFF_BOTTLE
 
     '''
     Drop off a bottle
     '''
     def dropoff_bottle(self):
+        self.state_pub.publish(self.robot_state)
         self.set_vel(0.0, 0.0)
         self.vel_pub.publish(self.vel)
+
         self.arm_pub.publish(self.ARM_DOWN_ANGLE)
         time.sleep(self.CLAW_DELAY)
         self.claw_pub.publish(self.CLAW_OPEN_ANGLE)
+        self.robot_state = self.STATE_STOP
 
 
     '''
