@@ -67,8 +67,8 @@ class TrashBot:
         # Published topics
         self.goal_simple_pub = rospy.Publisher("/move_base/goal_simple", PoseStamped, queue_size = self.QUEUE_SIZE)
         self.vel_pub = rospy.Publisher("/intermediate_vel", Twist, queue_size = self.QUEUE_SIZE)
-        self.arm_pub = rospy.Publisher("/arm", UInt16, queue_size = self.QUEUE_SIZE)
-        self.claw_pub = rospy.Publisher("/claw", UInt16, queue_size = self.QUEUE_SIZE)
+        self.claw_pub = rospy.Publisher("/servo1", UInt16, queue_size = self.QUEUE_SIZE)
+        self.arm_pub = rospy.Publisher("/servo2", UInt16, queue_size = self.QUEUE_SIZE)
         self.state_pub = rospy.Publisher("/robot_state", Int8, queue_size = self.QUEUE_SIZE)
         self.tracker_flag = rospy.Publisher("/tracker_flag", Bool, queue_size = self.QUEUE_SIZE)
 
