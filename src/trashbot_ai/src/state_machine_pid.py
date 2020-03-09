@@ -77,6 +77,7 @@ class TrashBot:
         self.servo_rate = rospy.Rate(self.SERVO_PUBLISH_RATE)
 
         # Subscribed topics
+    
         self.depth_image_sub = message_filters.Subscriber('/camera/depth/image_rect_raw', Image)
         self.box_sub = message_filters.Subscriber('/darknet_ros/bounding_boxes',BoundingBoxes)
         self.goal_reached_sub = message_filters.Subscriber('/rtabmap/goal_reached', Bool)
