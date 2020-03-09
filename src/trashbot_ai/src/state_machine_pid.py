@@ -17,6 +17,7 @@ import message_filters
 from cv_bridge import CvBridge, CvBridgeError
 from darknet_ros_msgs.msg import BoundingBox,BoundingBoxes
 
+print("="*50)
 print("Environment Ready")
 
 """
@@ -27,6 +28,7 @@ class TrashBot:
     FORWARD_THRESHOLD = 0.18
     FORWARD_SPEED = 1.3
     GRAB_SIZE_THRESHOLD = 300.0
+    GRAB_DIST_THRESHOLD = 0.12 # m
     IMAGE_HEIGHT = 480.0
     IMAGE_WIDTH = 640.0
     IMAGE_HALF_WIDTH = 320.0
@@ -38,9 +40,6 @@ class TrashBot:
     PROPORTIONAL = 2.0
     MINIUMUM_TURN = 1.5
     FIND_TURN = 1.4
-    VEL_PUBLISH_RATE = 10.0
-    SERVO_PUBLISH_RATE = 10.0
-    QUEUE_SIZE = 10
     CLAW_DELAY = 0.5
     TURN_DELAY = 0.08
     STARTUP_TRACKER_DELAY = 1.0
@@ -60,6 +59,7 @@ class TrashBot:
     STATE_DROPOFF_BOTTLE = 6
 
     def __init__(self):
+
         #  Create this ROSPy node
         rospy.init_node('Navigator', anonymous=True)
         self.bridge = CvBridge()
@@ -70,7 +70,7 @@ class TrashBot:
         self.claw_pub = rospy.Publisher("/servo1", UInt16, queue_size = self.QUEUE_SIZE)
         self.arm_pub = rospy.Publisher("/servo2", UInt16, queue_size = self.QUEUE_SIZE)
         self.state_pub = rospy.Publisher("/robot_state", Int8, queue_size = self.QUEUE_SIZE)
-        self.tracker_flag = rospy.Publisher("/tracker_flag", Bool, queue_size = self.QUEUE_SIZE)
+        #self.tracker_flag = rospy.Publisher("/tracker_flag", Bool, queue_size = self.QUEUE_SIZE)
 
         # And publish rates
         self.vel_rate = rospy.Rate(self.VEL_PUBLISH_RATE)
@@ -81,6 +81,10 @@ class TrashBot:
         self.depth_image_sub = message_filters.Subscriber('/camera/depth/image_rect_raw', Image)
         self.box_sub = message_filters.Subscriber('/darknet_ros/bounding_boxes',BoundingBoxes)
         self.goal_reached_sub = message_filters.Subscriber('/rtabmap/goal_reached', Bool)
+
+        # Time synchronizer
+        self.ts = message_filters.TimeSynchronizer([self.depth_image_sub, self.box_sub], self.QUEUE_SIZE)
+        self.ts.registerCallback(self.navigate_bottle_callback)
 
         # Initially set dropoff
         self.robot_state = self.STATE_SET_DROPOFF
@@ -101,11 +105,7 @@ class TrashBot:
         # Zero velocity message
         self.zero_vel = copy.deepcopy(self.vel)
 
-        # Goal radius
-        self.goal_radius = 0.5
-
-        print("="*50)
-        print("= Initialize TrashBot")
+        print("= Done Initializing TrashBot")
         print("="*50)
 
     def euler_to_quaternion(self,roll, pitch, yaw):
@@ -138,7 +138,7 @@ class TrashBot:
         self.dropoff_pose.position.x = 0.0
         self.dropoff_pose.position.y = 0.0
         self.dropoff_pose.position.z = 0.0
-        qx,qy,qz,qw = self.euler_to_quaternion(0.0,0.0,0.0)
+        qx,qy,qz,qw = self.euler_to_quaternion(0.0, 0.0, 0.0)
         self.dropoff_pose.orientation.x = qx
         self.dropoff_pose.orientation.y = qy
         self.dropoff_pose.orientation.z = qz
@@ -199,16 +199,40 @@ class TrashBot:
     Callback function for navigating to a bottle whenever a new bottle pose is published
     by the object_tracker
     '''
-    def navigate_bottle_callback(self, data):
-        boxes = data.bounding_boxes
+    def navigate_bottle_callback(self, depth, bboxes):
+        boxes = bboxes.bounding_boxes
         box = next(iter(list(filter(lambda x : x.Class == "bottle", boxes))), None)
 
+        # Just look at first bottle (no queue)
         if box != None:
             # Navigate to first bottle seen
             # Determine size of bottle
-            size = box.xmax - box.xmin + 1
-            print("Bottle Size = {}".format(size))
-            if size > self.GRAB_SIZE_THRESHOLD:
+            #size = box.xmax - box.xmin + 1
+            #print("Bottle Size = {}".format(size))
+
+            # Get distance to bottle from depth image
+            depth_image = self.bridge.imgmsg_to_cv2(depth, "32FC1")
+            depth = np.array(depth_image, dtype = np.dtype('f8'))
+
+            height, width = self.IMAGE_HEIGHT,self.IMAGE_WIDTH
+            expected = 300.0
+            scale = height / expected
+            crop_start = 0.0
+            xmin_depth = int((box.xmin * expected + crop_start) * scale)
+            ymin_depth = int((box.ymin * expected) * scale)
+            xmax_depth = int((box.xmax * expected + crop_start) * scale)
+            ymax_depth = int((box.ymax * expected) * scale)
+
+            depth = depth[xmin_depth:xmax_depth, ymin_depth:ymax_depth].astype(float)
+
+            # Get data scale from the device and convert to meters
+            depth_scale = profile.get_device().first_depth_sensor().get_depth_scale()
+            depth = depth * depth_scale
+
+            distance, _, _, _ = cv2.mean(depth)
+            print("Bottle Distance {}".format(distance))
+            #if size > self.GRAB_SIZE_THRESHOLD:
+            if distance < self.GRAB_DIST_THRESHOLD:
                 self.robot_state = self.STATE_PICKUP_BOTTLE
                 return
 
@@ -278,6 +302,7 @@ class TrashBot:
         self.arm_pub.publish(self.ARM_DOWN_ANGLE)
         time.sleep(self.CLAW_DELAY)
         self.claw_pub.publish(self.CLAW_OPEN_ANGLE)
+        time.sleep(self.STARTUP_DROPOFF_DELAY)
         self.robot_state = self.STATE_STOP
 
 
